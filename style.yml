@@ -1,0 +1,17 @@
+---
+- name: Install gnome styles
+  pacman:
+    name: arc-gtk-theme materia-gtk-theme numix-gtk-theme gnome-icon-theme papirus-icon-theme archlinux-wallpaper
+    state: present
+
+
+- name:
+  become_user: "{{ user.name }}"
+  shell: |
+    export $(dbus-launch)
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
+    gsettings set org.gnome.desktop.screensaver picture-uri file:///usr/share/archlinux/wallpaper/archlinux-simplyblack.jpg
+    gsettings set org.gnome.desktop.background picture-uri file:///usr/share/archlinux/wallpaper/archlinux-poolclouds.jpg
+    gsettings set org.gnome.desktop.input-sources source "[('xkb', 'us+altgr-intl')]"
+    gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false

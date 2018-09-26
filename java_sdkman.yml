@@ -1,0 +1,41 @@
+---
+- name: Check for sdkman installation
+  become_user: "{{ user.name }}"
+  stat:
+    path: $HOME/.sdkman/bin/sdkman-init.sh
+  register: sdkman_check
+
+- debug:
+    var: sdkman_check
+
+- name: fetch sdkman install script
+  become_user: "{{ user.name }}"
+  get_url:
+    url: https://get.sdkman.io
+    dest: /tmp/sdkman_init
+  when: not sdkman_check.stat.exists
+
+- name: install sdkman
+  become_user: "{{ user.name }}"
+  # using zsh to insert into .zshrc as well as .bashrc
+  shell: zsh /tmp/sdkman_init
+  when: not sdkman_check.stat.exists
+
+- name: Install java kotlin gradle maven
+  become_user: "{{ user.name }}"
+  shell: |
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+    sdk install java
+    sdk install kotlin
+    sdk install gradle
+    sdk install maven
+  args:
+    executable: /usr/bin/bash
+
+- name: Cleanup sdkman install
+  become_user: "{{ user.name }}"
+  file:
+    path: /tmp/sdkman_init
+    state: absent
+
+

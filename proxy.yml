@@ -1,0 +1,51 @@
+---
+- name: Create user bin directory
+  become_user: "{{ user.name }}"
+  file:
+    dest: $HOME/bin/
+    state: directory
+
+- name: Add proxy script to ~/bin
+  become_user: "{{ user.name }}"
+  copy:
+    dest: $HOME/bin/proxy_on
+    mode: u+x
+    content: |
+      # source me
+
+      proxy={{proxy.address}}
+      noproxy={{proxy.noproxy}}
+
+      for envvar in http_proxy HTTP_PROXY
+      do
+         export ${envvar}=http://$proxy
+      done
+
+      for envvar in https_proxy HTTPS_PROXY
+      do
+         export ${envvar}=https://$proxy
+      done
+
+      for envvar in ftp_proxy FTP_PROXY
+      do
+         export ${envvar}=ftp://$proxy
+      done
+
+      for envvar in no_proxy NO_PROXY
+      do
+         export ${envvar}=$noproxy
+      done
+
+      unset proxy noproxy
+
+- name: Add proxy_off script to ~/bin
+  become_user: "{{ user.name }}"
+  copy:
+    dest: $HOME/bin/proxy_off
+    mode: +x
+    content: |
+      # source me
+      for envvar in http_proxy ftp_proxy https_proxy HTTP_PROXY HTTPS_PROXY FTP_PROXY
+      do
+         unset ${envvar}
+      done

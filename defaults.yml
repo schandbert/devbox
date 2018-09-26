@@ -1,0 +1,9 @@
+---
+#copy to vars.yaml an modify to your needs
+- user:
+    name: "schandbert"
+    # use mkpasswd --method=sha-512 to generate from plain password
+    pass: "$6$vS0oZTXuhVwv2LH$9bD8JpxXqpBbM2.bRB3/38kVsv/5bPkjEUOjQu79rUqS.2uD3E4KmAs4hieiBKNXflglHOIsrYYuVyAuTNbUj."
+- proxy:
+    address: example.org:1234
+    noproxy: "localhost,127.0.0.1"

@@ -1,0 +1,32 @@
+#git clone https://aur.archlinux.org/yay.git
+#cd yay
+#makepkg -si
+---
+- name: Install prequesites
+  pacman:
+    name: base-devel fakeroot git go
+    state: present
+
+- name: Clone yay repo
+  become: no
+  git:
+    repo: https://aur.archlinux.org/yay.git
+    dest: /tmp/yay
+
+#TODO become default user
+- name: Install yay
+  become: no
+  shell: |
+    makepkg -si --needed --noconfirm
+  args:
+    chdir: /tmp/yay
+  register: output
+
+- debug:
+    var: output
+
+- name: Clean up yay repo
+  file:
+    path: /tmp/yay
+    state: absent
+

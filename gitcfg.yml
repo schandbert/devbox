@@ -1,0 +1,12 @@
+---
+- name: Install mycfg
+  become_user: "{{ user.name }}"
+  shell: |
+    git init --separate-git-dir=$HOME/.mycfg
+    alias cfg='/usr/bin/git --git-dir=$HOME/.mycfg/ --work-tree=$HOME'
+    cfg remote add origin https://github.com/schandbert/config
+    cfg fetch
+    cfg reset --hard origin/master
+    cfg checkout -B master --track origin/master
+  args:
+    chdir: $HOME

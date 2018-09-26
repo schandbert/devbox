@@ -1,0 +1,12 @@
+---
+- name: install zsh
+  pacman: 
+    name: zsh
+    state: present
+
+- name: set as default shell
+  command: "chsh -s /bin/zsh {{ user.name }}"
+
+- name: Install antigen zsh plugin manager
+  become: no
+  command: yay -S antigen-git --needed --noconfirm

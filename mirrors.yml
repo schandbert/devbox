@@ -1,0 +1,15 @@
+---
+- name: Install package reflector
+  pacman:
+    name: reflector
+    state: present
+
+# TODO use timed job
+- name: Backup mirrors
+  copy:
+    src: /etc/pacman.d/mirrorlist
+    dest: /etc/pacman.d/mirrorlist.backup@{{ansible_date_time.iso8601_basic_short}}
+    remote_src: yes
+
+- name: Run reflector
+  shell: reflector --country Germany --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist

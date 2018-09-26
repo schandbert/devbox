@@ -1,0 +1,29 @@
+---
+- name: Make sure we have a 'wheel' group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) ALL'
+
+- name: "Add user {{ user.name }}"
+  user:
+    name: "{{ user.name }}"
+    password: "{{ user.pass }}"
+    shell: /bin/bash
+    group: users
+    groups: wheel
+
+#- name: "Add user {{ user.name }}"
+#  user:
+#    name: "{{ user.name }}"
+#    password: $1$HW34Q/xJ$HZs7g90RKG/6v5kK063aO0
+#    shell: /bin/bash
+#    group: users
+#    groups: wheel
+
