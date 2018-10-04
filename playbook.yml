@@ -31,8 +31,6 @@
 
 #    - import_tasks: mirrors.yml
 
-    - import_tasks: update.yml
-
     - name: Uninstall preinstalled guest additions
       pacman:
         name: virtualbox-guest-modules-arch virtualbox-guest-utils-nox
