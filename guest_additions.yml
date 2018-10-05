@@ -1,0 +1,16 @@
+---
+- name: Uninstall preinstalled guest additions
+  pacman:
+    name: virtualbox-guest-utils-nox
+    state: absent
+#
+- name: Install guest additions
+  pacman:
+    name: linux-headers virtualbox-guest-utils
+    state: present
+
+- name: Enable vboxservice.service
+  systemd:
+    name: vboxservice
+    enabled: yes
+    state: started

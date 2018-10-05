@@ -15,7 +15,7 @@
     dest: /tmp/sdkman_init
   when: not sdkman_check.stat.exists
 
-- name: install sdkman
+- name: Install sdkman
   become_user: "{{ user.name }}"
   # using zsh to insert into .zshrc as well as .bashrc
   shell: zsh /tmp/sdkman_init

@@ -1,7 +1,7 @@
 ---
 - name: Install gnome styles
   pacman:
-    name: arc-gtk-theme materia-gtk-theme numix-gtk-theme gnome-icon-theme papirus-icon-theme archlinux-wallpaper
+    name: arc-gtk-theme materia-gtk-theme numix-gtk-theme gnome-icon-theme papirus-icon-theme archlinux-wallpaper adobe-source-code-pro-fonts
     state: present
 
 
