@@ -15,6 +15,10 @@
           proxy.address: {{proxy.address}}
           proxy.noproxy: {{proxy.noproxy}}"
 
+    - import_tasks: mirrors.yml
+
+    - import_tasks: update.yml
+
     - name: set timezone to Europe/Berlin
       timezone:
         name: Europe/Berlin
@@ -29,40 +33,24 @@
 
     - import_tasks: proxy.yml
 
-#    - import_tasks: mirrors.yml
-
-    - name: Uninstall preinstalled guest additions
-      pacman:
-        name: virtualbox-guest-modules-arch virtualbox-guest-utils-nox
-        state: absent
-
-    - name: Install guest additions
-      pacman:
-        name: linux-headers virtualbox-guest-dkms virtualbox-guest-utils
-        state: present
-
-    - name: Enable vboxservice.service
-      systemd:
-        name: vboxservice
-        enabled: yes
-        state: started
-
     - name: Install essentials
       pacman:
-        name: htop tmux neovim xdg-utils
+        name: htop tmux neovim xdg-utils unzip
         state: present
 
     - name: Check docker
       shell: pacman -Qi docker
       ignore_errors: yes
+      failed_when: no
       register: docker_check
 
     - import_tasks: docker.yml
       when: docker_check.rc != 0
 
-    - name: check yay
+    - name: Check yay
       shell: pacman -Qi yay
       ignore_errors: yes
+      failed_when: no
       register: yay_check
 
     - import_tasks: yay.yml
@@ -76,58 +64,17 @@
 
     - import_tasks: gitcfg.yml
 
-    - name: Install gnome
-      pacman:
-        name: gdm gnome gnome-tweaks
-        state: present
-
-    - name: Install graphical
-      pacman:
-        name: firefox
-        state: present
-
-    - name: Enable gdm.service
-      systemd:
-        name: gdm
-        enabled: yes
-        state: started
-
-    # TODO write gnome-terminal profile
-#    - name: Install prequesite for dconf module
-#      pacman:
-#        name: python-psutil
-#        state: present
-#
-#    - name: Create Profile UUID
-#      shell: uuidgen
-#      register: uuid
-#
-#    - dconf:
-#        key: /org/gnome/terminal/legacy/profiles:
-#        value: list
-#        state: present
-#    - dconf:
-#        key: /org/gnome/terminal/legacy/profiles:/list
-#        value: ['{{uuid.stdout}}']
-#        state: present
-#
-#    - dconf:
-#        key: /org/gnome/terminal/legacy/profiles:/:{{uuid.stdout}}/visible-name
-#        value: Schandberts Profile
-#        state: present
-#
-#    - dconf:
-#        key: /org/gnome/terminal/legacy/profiles:/:{{uuid.stdout}}/background-color/
-#        value: rgb(0,0,0)
-#        state: present
-#
-#    - dconf:
-#        key: /org/gnome/terminal/legacy/profiles:/:{{uuid}}/foreground-color/
-#        value: rgb(255,255,255)
-#        state: present
-
+    - import_tasks: guest_additions.yml
 
     - import_tasks: java_sdkman.yml
 
-    - import_tasks: style.yml
+    - import_tasks: gnome.yml
 
+    - name: Install graphical
+      pacman:
+        name: firefox chromium
+        state: present
+
+    - name: Install intellij idea
+      become: no
+      shell: yay -S intellij-idea-ultimate-edition --needed --noconfirm

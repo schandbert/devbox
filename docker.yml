@@ -13,8 +13,10 @@
     groups: docker
     append: yes
 
+# may need reboot after kernel update
 - name: Enable docker.service
   systemd:
-    name: docker.service 
+    name: docker.service
     enabled: yes
     state: started
+  ignore_errors: yes

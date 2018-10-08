@@ -1,0 +1,19 @@
+---
+- name: Update packages
+  pacman:
+    update_cache: yes
+    upgrade: yes
+  register: updated
+
+- debug:
+    var: updated.packages
+
+- set_fact:
+    needs_reboot: "{{ 'linux' in updated.packages }}"
+
+- debug:
+    var: needs_reboot
+
+# doesn't work on local provisioners
+#- reboot:
+#  when: needs_reboot
