@@ -5,16 +5,23 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
-Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
+#
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
-  # config.vm.box = "base"
+# Require YAML module
+require 'yaml'
+
+# Read YAML file with box details
+vars = YAML.load_file('vars.yml')
+
+Vagrant.configure("2") do |config|
   config.vm.box = "archlinux/archlinux"
-  # config.vm.box = "terrywang/archlinux"
+
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.enabled = true
+    config.proxy.http = "http://" + vars['proxy']['address']
+    config.proxy.https = "https://" + vars['proxy']['address']
+    config.proxy.no_proxy = vars['proxy']['noproxy']
+  end
 
   config.vm.provider "virtualbox" do |vb|
     vb.name = "devbox"
@@ -22,31 +29,25 @@ Vagrant.configure("2") do |config|
     # Display the VirtualBox GUI when booting the machine
     vb.gui = true
     # Customize the amount of memory on the VM:
-    vb.memory = "8192"
+    vb.memory = "16384"
     vb.customize ["modifyvm", :id, "--vram", "128"]
+    vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+    vb.customize ["modifyvm", :id, "--monitorcount", "2"]
     vb.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
     vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
   end
 
   config.vm.provision "shell", inline: <<-SHELL
-    # install python as prequesite for ansible
+    # update pacman keys
     pacman -S archlinux-keyring
     pacman-key --populate
-
-    # update mirrors
-    curl -s "https://www.archlinux.org/mirrorlist/?country=DE&protocol=https&use_mirror_status=on" | sed -e 's/^#Server/Server/' -e '/^#/d' > /etc/pacman.d/mirrorlist
-
-    # ugrade packages but ignore kernel since this may imply reboot
-    pacman -Syyu --ignore linux
-    # install python as perquisite for ansible
-    pacman -S python --needed --noconfirm
   SHELL
 
   # Run Ansible from the Vagrant Host
-  config.vm.provision "ansible" do |ansible|
+  config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "playbook.yml"
-      # ansible.verbose = "v"
-      # ansible.start_at_task = "Display vars"
+    # ansible.verbose = "vv"
+    # ansible.start_at_task = "Update packages"
   end
 
 end
