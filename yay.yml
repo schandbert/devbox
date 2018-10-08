@@ -10,9 +10,10 @@
 - name: Clone yay repo
   become: no
   git:
-    repo: https://github.com/Jguer/yay
+    repo: https://aur.archlinux.org/yay.git
     dest: /tmp/yay
 
+#TODO become default user
 - name: Install yay
   become: no
   shell: |
