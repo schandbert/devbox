@@ -10,9 +10,10 @@ Vagrant.configure("2") do |config|
   config.vm.box = "archlinux/archlinux"
 
   if Vagrant.has_plugin?("vagrant-proxyconf")
+    puts "using proxy"
     config.proxy.enabled = true
     config.proxy.http = "http://" + vars['proxy']['address']
-    config.proxy.https = "https://" + vars['proxy']['address']
+    config.proxy.https = "http://" + vars['proxy']['address']
     config.proxy.no_proxy = vars['proxy']['noproxy']
   end
 
