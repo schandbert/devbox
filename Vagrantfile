@@ -23,10 +23,10 @@ Vagrant.configure("2") do |config|
     # Display the VirtualBox GUI when booting the machine
     vb.gui = true
     # Customize the amount of memory on the VM:
-    vb.memory = "16384"
+    vb.memory = "8192"
     vb.customize ["modifyvm", :id, "--vram", "128"]
     vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
-    vb.customize ["modifyvm", :id, "--monitorcount", "2"]
+    vb.customize ["modifyvm", :id, "--monitorcount", "1"]
     vb.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
     vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
   end
@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
   # Run Ansible from the Vagrant Host
   config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "playbook.yml"
-    # ansible.verbose = "vv"
+    ansible.verbose = "vv"
     # ansible.start_at_task = "Update packages"
   end
 

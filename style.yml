@@ -5,7 +5,7 @@
     state: present
 
 
-- name:
+- name: Style using gsettings
   become_user: "{{ user.name }}"
   shell: |
     export $(dbus-launch)
@@ -13,5 +13,12 @@
     gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
     gsettings set org.gnome.desktop.screensaver picture-uri file:///usr/share/archlinux/wallpaper/archlinux-simplyblack.jpg
     gsettings set org.gnome.desktop.background picture-uri file:///usr/share/archlinux/wallpaper/archlinux-poolclouds.jpg
-    gsettings set org.gnome.desktop.input-sources source "[('xkb', 'us+altgr-intl')]"
+    gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+altgr-intl')]"
     gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
+
+    # find default profild
+    profile=$(gsettings get org.gnome.Terminal.ProfilesList default)
+    # remove leading and trailing single quotes
+    profile=${profile:1:-1}
+    gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$profile/" use-system-font false
+    gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$profile/" font 'Source Code Pro Regular 12'
