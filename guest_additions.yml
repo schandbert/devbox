@@ -6,7 +6,7 @@
 #
 - name: Install guest additions
   pacman:
-    name: linux-headers virtualbox-guest-utils
+    name: linux-headers linux-lts-headers virtualbox-guest-utils
     state: present
 
 - name: Enable vboxservice.service

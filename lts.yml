@@ -1,0 +1,9 @@
+---
+- name: Install lts kernel
+  pacman:
+    name: linux-lts, linux-lts-headers
+    state: present
+
+- name: Update grub config
+  shell: |
+    grub-mkconfig -o /boot/grub/grub.cfg

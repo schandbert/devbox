@@ -9,7 +9,7 @@
     var: updated.packages
 
 - set_fact:
-    needs_reboot: "{{ 'linux' in updated.packages }}"
+    needs_reboot: "{{ ('linux' in updated.packages) or ('linux-lts' in updated.packages) }}"
 
 - debug:
     var: needs_reboot

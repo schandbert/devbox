@@ -19,6 +19,8 @@
 
     - import_tasks: update.yml
 
+    - import_tasks: lts.yml
+
     - name: set timezone to Europe/Berlin
       timezone:
         name: Europe/Berlin
