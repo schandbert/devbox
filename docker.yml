@@ -13,6 +13,19 @@
     groups: docker
     append: yes
 
+- name: add service to file
+  lineinfile:
+    path: /etc/systemd/system/docker.service.d/http-proxy.conf
+    create: yes
+    regexp: '^\[Service'
+    line: '[Service]'
+
+- name: add environment to file
+  lineinfile:
+    path: /etc/systemd/system/docker.service.d/http-proxy.conf
+    regexp: '^Environment'
+    line: 'Environment = "HTTP_PROXY=http://{{ proxy.address }}" "HTTPS_PROXY=http://{{ proxy.address }}" "NO_PROXY={{ proxy.noproxy}}"'
+
 # may need reboot after kernel update
 - name: Enable docker.service
   systemd:

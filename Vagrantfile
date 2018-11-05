@@ -41,7 +41,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "playbook.yml"
     ansible.verbose = "vv"
-    # ansible.start_at_task = "Update packages"
+    # ansible.start_at_task = "Install docker"
   end
 
 end

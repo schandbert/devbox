@@ -4,80 +4,73 @@
 
   # copy defaults.yml to vars.yml and change variable to your needs
   vars_files:
-    - defaults.yml
-    - vars.yml
+  - defaults.yml
+  - vars.yml
 
   tasks:
-    - name: Display vars
-      debug:
-        msg: "Provisioning with vars
+  - name: Display vars
+    debug:
+      msg: "Provisioning with vars
           user.name: {{user.name}}
           proxy.address: {{proxy.address}}
           proxy.noproxy: {{proxy.noproxy}}"
 
-    - import_tasks: mirrors.yml
+  - import_tasks: mirrors.yml
 
-    - import_tasks: update.yml
+  - import_tasks: update.yml
 
-# problem with guest additions
-#    - import_tasks: lts.yml
+  # problem with guest additions
+  #    - import_tasks: lts.yml
 
-    - name: set timezone to Europe/Berlin
-      timezone:
-        name: Europe/Berlin
+  - name: set timezone to Europe/Berlin
+    timezone:
+      name: Europe/Berlin
 
-    - name: Colorize pacman
-      replace:
-        path: /etc/pacman.conf
-        regexp: ^#Color
-        replace: Color
+  - name: Colorize pacman
+    replace:
+      path: /etc/pacman.conf
+      regexp: ^#Color
+      replace: Color
 
-    - import_tasks: users.yml
+  - import_tasks: users.yml
 
-    - import_tasks: proxy.yml
+  - import_tasks: proxy.yml
 
-    - name: Install essentials
-      pacman:
-        name: htop tmux neovim xdg-utils unzip
-        state: present
+  - name: Install essentials
+    pacman:
+      name: htop tmux neovim xdg-utils unzip
+      state: present
 
-    - name: Check docker
-      shell: pacman -Qi docker
-      ignore_errors: yes
-      failed_when: no
-      register: docker_check
+  - import_tasks: docker.yml
 
-    - import_tasks: docker.yml
-      when: docker_check.rc != 0
+  - name: Check yay
+    shell: pacman -Qi yay
+    ignore_errors: yes
+    failed_when: no
+    register: yay_check
 
-    - name: Check yay
-      shell: pacman -Qi yay
-      ignore_errors: yes
-      failed_when: no
-      register: yay_check
+  - import_tasks: yay.yml
+    when: yay_check.rc != 0
 
-    - import_tasks: yay.yml
-      when: yay_check.rc != 0
+  - name: Install vim-plug
+    become: no
+    shell: yay -S vim-plug --needed --noconfirm
 
-    - name: Install vim-plug
-      become: no
-      shell: yay -S vim-plug --needed --noconfirm
+  - import_tasks: zsh.yml
 
-    - import_tasks: zsh.yml
+  - import_tasks: gitcfg.yml
 
-    - import_tasks: gitcfg.yml
+  - import_tasks: guest_additions.yml
 
-    - import_tasks: guest_additions.yml
+  - import_tasks: java_sdkman.yml
 
-    - import_tasks: java_sdkman.yml
+  - import_tasks: gnome.yml
 
-    - import_tasks: gnome.yml
+  - name: Install graphical
+    pacman:
+      name: firefox chromium
+      state: present
 
-    - name: Install graphical
-      pacman:
-        name: firefox chromium
-        state: present
-
-    - name: Install intellij idea
-      become: no
-      shell: yay -S intellij-idea-ultimate-edition --needed --noconfirm
+  - name: Install intellij idea
+    become: no
+    shell: yay -S intellij-idea-ultimate-edition --needed --noconfirm
