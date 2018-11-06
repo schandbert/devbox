@@ -13,7 +13,9 @@
       msg: "Provisioning with vars
           user.name: {{user.name}}
           proxy.address: {{proxy.address}}
-          proxy.noproxy: {{proxy.noproxy}}"
+          proxy.noproxy: {{proxy.noproxy}}
+          git user.name: {{git.user.name}}
+          git user.email: {{git.user.email}}"
 
   - import_tasks: mirrors.yml
 
@@ -38,8 +40,10 @@
 
   - name: Install essentials
     pacman:
-      name: htop tmux neovim xdg-utils unzip
+      name: git htop tmux neovim xdg-utils unzip tree
       state: present
+
+  - import_tasks: git_settings.yml
 
   - import_tasks: docker.yml
 
