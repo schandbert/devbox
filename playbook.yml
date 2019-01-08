@@ -40,7 +40,7 @@
 
   - name: Install essentials
     pacman:
-      name: git htop tmux neovim xdg-utils unzip tree httpie
+      name: git htop tmux neovim xdg-utils unzip tree httpie socat
       state: present
 
   - import_tasks: git_settings.yml
