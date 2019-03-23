@@ -26,9 +26,9 @@
   shell: |
     source "$HOME/.sdkman/bin/sdkman-init.sh"
     sdk install java
-    sdk install kotlin
+    # sdk install kotlin
     sdk install gradle
-    sdk install maven
+    # sdk install maven
   args:
     executable: /usr/bin/bash
 

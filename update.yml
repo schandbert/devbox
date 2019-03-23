@@ -1,9 +1,11 @@
 ---
+#  doesn't apply noconfirm
 - name: Update packages
   pacman:
     update_cache: yes
     upgrade: yes
   register: updated
+
 
 - debug:
     var: updated.packages
@@ -15,5 +17,5 @@
     var: needs_reboot
 
 # doesn't work on local provisioners
-#- reboot:
-#  when: needs_reboot
+- reboot:
+  when: needs_reboot

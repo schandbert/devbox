@@ -19,7 +19,7 @@
 
   - import_tasks: mirrors.yml
 
-  - import_tasks: update.yml
+  #- import_tasks: update.yml
 
   # problem with guest additions
   #    - import_tasks: lts.yml
@@ -40,7 +40,7 @@
 
   - name: Install essentials
     pacman:
-      name: git htop tmux neovim xdg-utils unzip tree httpie socat
+      name: git htop tmux neovim xdg-utils unzip tree httpie socat fzf mtr alacritty
       state: present
 
   - import_tasks: git_settings.yml
@@ -75,6 +75,7 @@
       name: firefox chromium
       state: present
 
-  - name: Install intellij idea
-    become: no
-    shell: yay -S intellij-idea-ultimate-edition --needed --noconfirm
+# running enlessly?!
+#  - name: Install intellij idea
+#    become: no
+#    shell: yay -S intellij-idea-ultimate-edition --needed --noconfirm

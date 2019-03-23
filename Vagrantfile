@@ -35,6 +35,7 @@ Vagrant.configure("2") do |config|
     # update pacman keys
     pacman -S archlinux-keyring
     pacman-key --populate
+    pacman -Syu --noconfirm
   SHELL
 
   # Run Ansible from the Vagrant Host
